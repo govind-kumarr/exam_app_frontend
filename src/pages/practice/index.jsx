@@ -2,6 +2,7 @@ import { Box, Button } from "@mui/material";
 import Row from "./components/Row";
 import useQuestions from "./../../context/useQuestions";
 import { useEffect, useState } from "react";
+import CountDown from "./components/CountDown";
 
 const QuestionSlider = () => {
   const { dataset, changeStructure } = useQuestions();
@@ -11,10 +12,8 @@ const QuestionSlider = () => {
   console.log({ dataset });
 
   useEffect(() => {
-    if (structure && changeStructure) {
-      changeStructure(structure.rows, structure.cols);
-    }
-  }, [structure]);
+    changeStructure(structure);
+  }, []);
 
   return (
     <Box
@@ -58,7 +57,7 @@ const QuestionSlider = () => {
               textTransform: "capitalize",
               gridColumn: "span 2",
             }}
-            onClick={() => setStructure({ ...structure })}
+            onClick={() => changeStructure(structure)}
           >
             refresh
           </Button>
@@ -71,7 +70,7 @@ const QuestionSlider = () => {
               textTransform: "capitalize",
               gridColumn: "span 2",
             }}
-            onClick={() => setStructure({ ...structure })}
+            onClick={() => changeStructure(structure)}
           >
             submit
           </Button>

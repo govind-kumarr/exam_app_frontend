@@ -1,9 +1,9 @@
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import useQuestions from "./../../../context/useQuestions";
 import { useEffect, useState } from "react";
 
 const Answer = ({ rowNumber, colNumber }) => {
-  const { dataset, addToRefs, focusNext } = useQuestions();
+  const { dataset, addToRefs, focusNext, time } = useQuestions();
   const [input, setInput] = useState("");
 
   let sum;
@@ -44,7 +44,18 @@ const Answer = ({ rowNumber, colNumber }) => {
         height: "100%",
         display: "flex",
       }}
-    ></Box>
+    >
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h6">{time}</Typography>
+      </Box>
+    </Box>
   );
 };
 

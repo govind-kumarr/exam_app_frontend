@@ -39,3 +39,22 @@ export const prepareData = (n, m) => {
   return matrix;
 };
 
+export const getFormattedTime = (timeInSeconds) => {
+  let hours=0,
+    minutes=0,
+    seconds=0,
+    remain = timeInSeconds;
+
+  if (Math.floor(remain / 3600) > 0) {
+    hours = Math.floor(remain / 3600);
+    remain = remain % 3600;
+  }
+  if (Math.floor(remain / 60) > 0) {
+    minutes = Math.floor(remain / 60);
+    remain = remain % 60;
+  }
+  seconds = remain;
+  return `${hours < 9 ? "0" : ""}${hours}:${minutes < 9 ? "0" : ""}${minutes}:${
+    seconds < 9 ? "0" : ""
+  }${seconds}`;
+};

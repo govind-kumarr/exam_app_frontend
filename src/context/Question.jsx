@@ -1,10 +1,6 @@
-import React, {
-  createContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import { prepareData } from "../utils/functions";
+import useTimer from "../hooks/useTimer";
 
 const QuestionContext = createContext({
   dataset: null,
@@ -18,14 +14,18 @@ const QuestionContext = createContext({
 const QuestionContextWrapper = ({ children }) => {
   const [dataset, setDataset] = useState(null);
   const [structure, setStructure] = useState({ rows: 4, cols: 4 });
+  const { time, startTimer, resetTimer } = useTimer();
   const answersRef = useRef(null);
-  const correctAnswerCountRef = useRef(0);
 
   const prepareDataset = (rows, cols) => {
     setDataset(prepareData(rows, cols));
+    answersRef.current = null;
+    resetTimer();
+    startTimer();
   };
 
-  const changeStructure = (rows, cols) => {
+  const changeStructure = (structure) => {
+    const { rows, cols } = structure;
     if (rows && cols) {
       setStructure({ rows, cols });
     }
@@ -40,18 +40,7 @@ const QuestionContextWrapper = ({ children }) => {
     }
   };
 
-  const checkAllAnswers = () => {
-    if (answersRef?.current) {
-      const answerCount = answersRef?.current.length;
-      const correctAnswerCount = correctAnswerCountRef?.current || 0;
-
-      if (correctAnswerCount === answerCount) {
-        answersRef.current = [];
-        prepareDataset(structure.rows, structure.cols);
-        correctAnswerCountRef.current = 0;
-      }
-    }
-  };
+  const checkAllAnswers = () => {};
 
   const focusNext = () => {
     if (answersRef?.current) {
@@ -60,8 +49,6 @@ const QuestionContextWrapper = ({ children }) => {
       );
       if (currentIndex !== -1 && currentIndex < answersRef.current.length - 1) {
         answersRef.current[currentIndex + 1]?.focus();
-        correctAnswerCountRef.current += 1;
-        checkAllAnswers();
       }
     }
   };
@@ -82,6 +69,7 @@ const QuestionContextWrapper = ({ children }) => {
         answersRef,
         addToRefs,
         focusNext,
+        time,
       }}
     >
       {children}
