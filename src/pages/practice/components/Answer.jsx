@@ -3,12 +3,23 @@ import useQuestions from "./../../../context/useQuestions";
 import { useEffect, useState } from "react";
 
 const Answer = ({ rowNumber, colNumber }) => {
-  const { dataset, addToRefs, focusNext, time } = useQuestions();
+  const { dataset, addToRefs, focusNext, handleSetAnswer, answers } =
+    useQuestions();
   const [input, setInput] = useState("");
 
   let sum;
 
   if (dataset) sum = dataset[rowNumber][0] + dataset[0][colNumber];
+
+  const checkAnswer = () => {
+    const currentAnswer = answers[`${rowNumber}${colNumber}`];
+    if (currentAnswer && currentAnswer?.input) {
+      return currentAnswer?.input === currentAnswer?.actualAnswer
+        ? "success"
+        : "warning";
+    }
+    return "primary";
+  };
 
   useEffect(() => {
     setInput("");
@@ -32,9 +43,14 @@ const Answer = ({ rowNumber, colNumber }) => {
           setInput(e.target.value);
           if (sum === Number(e.target.value) && focusNext) {
             focusNext();
+            handleSetAnswer(`${rowNumber}${colNumber}`, Number(e.target.value));
           }
         }}
-        disabled={sum === Number(input)}
+        // disabled={sum === Number(input)}
+        onBlur={(e) => {
+          handleSetAnswer(`${rowNumber}${colNumber}`, Number(e.target.value));
+        }}
+        color={checkAnswer()}
       />
     </Box>
   ) : (
@@ -53,7 +69,7 @@ const Answer = ({ rowNumber, colNumber }) => {
           alignItems: "center",
         }}
       >
-        <Typography variant="h6">{time}</Typography>
+        <Typography variant="h6"></Typography>
       </Box>
     </Box>
   );

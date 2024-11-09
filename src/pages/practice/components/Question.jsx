@@ -11,6 +11,7 @@ const Question = ({ number }) => {
         fontSize: 20,
         cursor: "default",
       }}
+      
     >
       {number}
     </Button>

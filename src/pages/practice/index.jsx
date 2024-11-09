@@ -5,11 +5,26 @@ import { useEffect, useState } from "react";
 import CountDown from "./components/CountDown";
 
 const QuestionSlider = () => {
-  const { dataset, changeStructure } = useQuestions();
+  const { dataset, changeStructure, answers } = useQuestions();
 
   const [structure, setStructure] = useState({ rows: 4, cols: 4 });
 
   console.log({ dataset });
+
+  const checkAllAnswers = () => {
+    let totalAnswers = 0;
+    let correctAnswers = 0;
+    Object.keys(answers).map((key) => {
+      const currentAnswer = answers[key];
+
+      currentAnswer.input === currentAnswer.actualAnswer
+        ? correctAnswers++
+        : null;
+      totalAnswers++;
+    });
+
+    return correctAnswers != totalAnswers;
+  };
 
   useEffect(() => {
     changeStructure(structure);
@@ -71,6 +86,7 @@ const QuestionSlider = () => {
               gridColumn: "span 2",
             }}
             onClick={() => changeStructure(structure)}
+            disabled={checkAllAnswers()}
           >
             submit
           </Button>

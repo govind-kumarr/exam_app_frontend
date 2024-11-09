@@ -14,14 +14,37 @@ const QuestionContext = createContext({
 const QuestionContextWrapper = ({ children }) => {
   const [dataset, setDataset] = useState(null);
   const [structure, setStructure] = useState({ rows: 4, cols: 4 });
-  const { time, startTimer, resetTimer } = useTimer();
+  const [answers, setAnswers] = useState({});
+
+  // const { time, startTimer, resetTimer } = useTimer();
   const answersRef = useRef(null);
 
   const prepareDataset = (rows, cols) => {
-    setDataset(prepareData(rows, cols));
+    const newDataset = prepareData(rows, cols);
+    setDataset(newDataset);
     answersRef.current = null;
-    resetTimer();
-    startTimer();
+    const answers = {};
+    newDataset.map((row, rowIndex) => {
+      row.map((col, columnIndex) => {
+        if (rowIndex > 0 && columnIndex > 0) {
+          answers[rowIndex + "" + columnIndex] = {
+            input: "",
+            actualAnswer: newDataset[rowIndex][0] + newDataset[0][columnIndex],
+          };
+        }
+      });
+    });
+    setAnswers(answers);
+    // resetTimer();
+    // startTimer();
+  };
+
+  const handleSetAnswer = (key, input) => {
+    const currentAnswer = answers[key];
+    if (currentAnswer.input != input) {
+      currentAnswer.input = input;
+      setAnswers((prev) => ({ ...prev, key: currentAnswer }));
+    }
   };
 
   const changeStructure = (structure) => {
@@ -69,7 +92,9 @@ const QuestionContextWrapper = ({ children }) => {
         answersRef,
         addToRefs,
         focusNext,
-        time,
+        handleSetAnswer,
+        answers,
+        // time,
       }}
     >
       {children}
