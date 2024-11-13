@@ -4,8 +4,25 @@ export const generateRandomNumber = (min = 10, max = 99) => {
   return _.random(min, max);
 };
 
-export const prepareData = (n, m) => {
+export const Diff = {
+  EASY: "EASY",
+  MED: "MEDIUM",
+  HARD: "HARD",
+};
+
+export const prepareData = (n, m, digit, difficulty) => {
   const matrix = [];
+  const maxDigitNumber = 10 ** digit - 1;
+  let minDigitNumber = 10;
+
+  if (difficulty === Diff.EASY) {
+  }
+  if (difficulty === Diff.MED) {
+    minDigitNumber = Math.floor(maxDigitNumber / 3);
+  }
+  if (difficulty === Diff.HARD) {
+    minDigitNumber = Math.floor(maxDigitNumber / 2);
+  }
 
   for (let i = 0; i < n; i++) {
     matrix.push(new Array(m).fill(0));
@@ -20,7 +37,7 @@ export const prepareData = (n, m) => {
       continue;
     }
 
-    matrix[i][j] = generateRandomNumber();
+    matrix[i][j] = generateRandomNumber(minDigitNumber, maxDigitNumber);
     j++;
   }
 
@@ -32,7 +49,7 @@ export const prepareData = (n, m) => {
       continue;
     }
 
-    matrix[i][j] = generateRandomNumber();
+    matrix[i][j] = generateRandomNumber(minDigitNumber, maxDigitNumber);
     i++;
   }
 
@@ -40,9 +57,9 @@ export const prepareData = (n, m) => {
 };
 
 export const getFormattedTime = (timeInSeconds) => {
-  let hours=0,
-    minutes=0,
-    seconds=0,
+  let hours = 0,
+    minutes = 0,
+    seconds = 0,
     remain = timeInSeconds;
 
   if (Math.floor(remain / 3600) > 0) {

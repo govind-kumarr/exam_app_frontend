@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useRef, useState } from "react";
-import { prepareData } from "../utils/functions";
+import { Diff, prepareData } from "../utils/functions";
 import useTimer from "../hooks/useTimer";
 
 const QuestionContext = createContext({
@@ -11,6 +11,13 @@ const QuestionContext = createContext({
   focusNext: null,
 });
 
+const Operator = {
+  ADD: "+",
+  SUBSTRACT: "-",
+  MULTIPLY: "*",
+  DIVIDE: "/",
+};
+
 const QuestionContextWrapper = ({ children }) => {
   const [dataset, setDataset] = useState(null);
   const [structure, setStructure] = useState({ rows: 4, cols: 4 });
@@ -19,17 +26,51 @@ const QuestionContextWrapper = ({ children }) => {
   // const { time, startTimer, resetTimer } = useTimer();
   const answersRef = useRef(null);
 
-  const prepareDataset = (rows, cols) => {
-    const newDataset = prepareData(rows, cols);
+  const prepareDataset = (structure) => {
+    const {
+      rows = 4,
+      cols = 4,
+      diff = Diff.EASY,
+      digit = 2,
+      operator = "+",
+    } = structure;
+    const newDataset = prepareData(rows, cols, digit, diff);
+
     setDataset(newDataset);
     answersRef.current = null;
     const answers = {};
     newDataset.map((row, rowIndex) => {
       row.map((col, columnIndex) => {
         if (rowIndex > 0 && columnIndex > 0) {
+          let actualAnswer;
+          switch (operator) {
+            case Operator.ADD:
+              actualAnswer =
+                newDataset[rowIndex][0] + newDataset[0][columnIndex];
+              break;
+            case Operator.SUBSTRACT:
+              actualAnswer = Math.abs(
+                newDataset[rowIndex][0] - newDataset[0][columnIndex]
+              );
+              break;
+            case Operator.MULTIPLY:
+              actualAnswer = Math.floor(
+                newDataset[0][columnIndex] * newDataset[rowIndex][0]
+              );
+              break;
+            case Operator.DIVIDE:
+              actualAnswer = Math.floor(
+                newDataset[0][columnIndex] / newDataset[rowIndex][0]
+              );
+              break;
+            default:
+              actualAnswer =
+                newDataset[rowIndex][0] + newDataset[0][columnIndex];
+              break;
+          }
           answers[rowIndex + "" + columnIndex] = {
             input: "",
-            actualAnswer: newDataset[rowIndex][0] + newDataset[0][columnIndex],
+            actualAnswer,
           };
         }
       });
@@ -48,9 +89,16 @@ const QuestionContextWrapper = ({ children }) => {
   };
 
   const changeStructure = (structure) => {
-    const { rows, cols } = structure;
+    const {
+      rows = 4,
+      cols = 4,
+      diff = Diff.EASY,
+      digit = 2,
+      operator = "+",
+    } = structure;
+
     if (rows && cols) {
-      setStructure({ rows, cols });
+      setStructure({ rows, cols, diff, digit, operator });
     }
   };
 
@@ -78,8 +126,7 @@ const QuestionContextWrapper = ({ children }) => {
 
   useEffect(() => {
     if (structure) {
-      const { rows, cols } = structure;
-      prepareDataset(rows, cols);
+      prepareDataset(structure);
     }
   }, [structure]);
 
@@ -87,7 +134,6 @@ const QuestionContextWrapper = ({ children }) => {
     <QuestionContext.Provider
       value={{
         dataset,
-        prepareDataset,
         changeStructure,
         answersRef,
         addToRefs,

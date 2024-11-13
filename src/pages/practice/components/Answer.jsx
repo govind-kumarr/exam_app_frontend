@@ -7,16 +7,16 @@ const Answer = ({ rowNumber, colNumber }) => {
     useQuestions();
   const [input, setInput] = useState("");
 
-  let sum;
+  let actualAnswer = answers[`${rowNumber}${colNumber}`]?.actualAnswer;
 
-  if (dataset) sum = dataset[rowNumber][0] + dataset[0][colNumber];
+  console.log({answers});
 
   const checkAnswer = () => {
     const currentAnswer = answers[`${rowNumber}${colNumber}`];
     if (currentAnswer && currentAnswer?.input) {
       return currentAnswer?.input === currentAnswer?.actualAnswer
-        ? "success"
-        : "warning";
+        ? "success.main"
+        : "error.main";
     }
     return "primary";
   };
@@ -38,10 +38,23 @@ const Answer = ({ rowNumber, colNumber }) => {
       <TextField
         value={input}
         inputRef={addToRefs}
-        sx={{ input: { textAlign: "center" } }}
+        sx={{
+          input: { textAlign: "center" },
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              borderColor: checkAnswer(), // uses the theme success color
+            },
+            "&:hover fieldset": {
+              borderColor: checkAnswer(), // darker color on hover
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: checkAnswer(), // color when focused
+            },
+          },
+        }}
         onChange={(e) => {
           setInput(e.target.value);
-          if (sum === Number(e.target.value) && focusNext) {
+          if (actualAnswer === Number(e.target.value) && focusNext) {
             focusNext();
             handleSetAnswer(`${rowNumber}${colNumber}`, Number(e.target.value));
           }

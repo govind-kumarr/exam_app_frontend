@@ -1,16 +1,72 @@
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import Row from "./components/Row";
 import useQuestions from "./../../context/useQuestions";
 import { useEffect, useState } from "react";
 import CountDown from "./components/CountDown";
+import { useForm } from "react-hook-form";
+import { Diff } from "../../utils/functions";
+
+const operatorValues = [
+  {
+    label: "Add",
+    value: "+",
+  },
+  {
+    label: "Substract",
+    value: "-",
+  },
+  {
+    label: "Multiply",
+    value: "*",
+  },
+  {
+    label: "Divide",
+    value: "/",
+  },
+];
+const difficultyValues = Object.values(Diff);
+const digitValues = [
+  {
+    label: "2",
+    value: 2,
+  },
+  {
+    label: "3",
+    value: 3,
+  },
+  {
+    label: "4",
+    value: 4,
+  },
+];
+
+const structure = { rows: 4, cols: 4 };
 
 const QuestionSlider = () => {
   const { dataset, changeStructure, answers } = useQuestions();
-
-  const [structure, setStructure] = useState({ rows: 4, cols: 4 });
+  const { handleSubmit, setValue, watch, reset, register } = useForm({
+    defaultValues: {
+      diff: "",
+      operator: "",
+      digit: "",
+    },
+  });
 
   console.log({ dataset });
 
+  const onSubmit = (data) => {
+    console.log({ data });
+    const { diff, digit, operator } = data;
+    if (diff && digit && operator)
+      changeStructure({ rows: 4, cols: 4, diff, digit, operator });
+  };
   const checkAllAnswers = () => {
     let totalAnswers = 0;
     let correctAnswers = 0;
@@ -52,6 +108,52 @@ const QuestionSlider = () => {
       >
         <Box
           sx={{
+            m: "auto",
+            display: "grid",
+            gridTemplateColumns: `repeat(auto-fill, minmax(150px, 1fr))`,
+            width: "100%",
+            gap: 1,
+            // border: "1px solid black",
+            px: 1,
+            py: 1,
+          }}
+          component={"form"}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <FormControl>
+            <InputLabel>Digit</InputLabel>
+            <Select
+              {...register("digit")}
+              label={"Select Digit"}
+              sx={{ color: "black" }}
+            >
+              {digitValues.map(({ label, value }) => {
+                return <MenuItem value={value}>{label}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabel>Operator</InputLabel>
+            <Select {...register("operator")}>
+              {operatorValues.map(({ label, value }) => {
+                return <MenuItem value={value}>{label}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabel>Difficulty</InputLabel>
+            <Select {...register("diff")}>
+              {difficultyValues.map((value) => {
+                return <MenuItem value={value}>{value}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+
+          <Button type="submit">Apply</Button>
+        </Box>
+        <Box
+          sx={{
+            // border: "1px solid black",
             m: "auto",
             display: "grid",
             gridTemplateColumns: `repeat(${structure.cols},1fr)`,
