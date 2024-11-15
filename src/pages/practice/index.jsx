@@ -50,7 +50,8 @@ const digitValues = [
 const structure = { rows: 4, cols: 4 };
 
 const QuestionSlider = () => {
-  const { dataset, changeStructure, answers } = useQuestions();
+  console.log("QuestionSlider");
+  const { dataset, changeStructure, allAnswersCorrect } = useQuestions();
   const { handleSubmit, setValue, watch, reset, register } = useForm({
     defaultValues: {
       diff: "",
@@ -59,27 +60,11 @@ const QuestionSlider = () => {
     },
   });
 
-  console.log({ dataset });
-
   const onSubmit = (data) => {
     console.log({ data });
     const { diff, digit, operator } = data;
     if (diff && digit && operator)
       changeStructure({ rows: 4, cols: 4, diff, digit, operator });
-  };
-  const checkAllAnswers = () => {
-    let totalAnswers = 0;
-    let correctAnswers = 0;
-    Object.keys(answers).map((key) => {
-      const currentAnswer = answers[key];
-
-      currentAnswer.input === currentAnswer.actualAnswer
-        ? correctAnswers++
-        : null;
-      totalAnswers++;
-    });
-
-    return correctAnswers != totalAnswers;
   };
 
   useEffect(() => {
@@ -188,7 +173,7 @@ const QuestionSlider = () => {
               gridColumn: "span 2",
             }}
             onClick={() => changeStructure(structure)}
-            disabled={checkAllAnswers()}
+            disabled={!allAnswersCorrect}
           >
             submit
           </Button>

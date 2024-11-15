@@ -19,9 +19,13 @@ const Operator = {
 };
 
 const QuestionContextWrapper = ({ children }) => {
+  console.log("QuestionContextWrapper");
+  
   const [dataset, setDataset] = useState(null);
   const [structure, setStructure] = useState({ rows: 4, cols: 4 });
   const [answers, setAnswers] = useState({});
+  const [startTimer, setTimer] = useState(false);
+  const [allAnswersCorrect, setAllAnswersCorrect] = useState(false);
 
   // const { time, startTimer, resetTimer } = useTimer();
   const answersRef = useRef(null);
@@ -80,6 +84,10 @@ const QuestionContextWrapper = ({ children }) => {
     // startTimer();
   };
 
+  const handleTimer = (val) => {
+    if (val != startTimer) setTimer(val);
+  };
+
   const handleSetAnswer = (key, input) => {
     const currentAnswer = answers[key];
     if (currentAnswer.input != input) {
@@ -111,7 +119,20 @@ const QuestionContextWrapper = ({ children }) => {
     }
   };
 
-  const checkAllAnswers = () => {};
+  const checkAllAnswers = () => {
+    let totalAnswers = 0;
+    let correctAnswers = 0;
+    Object.keys(answers).map((key) => {
+      const currentAnswer = answers[key];
+
+      currentAnswer.input === currentAnswer.actualAnswer
+        ? correctAnswers++
+        : null;
+      totalAnswers++;
+    });
+
+    return correctAnswers === totalAnswers;
+  };
 
   const focusNext = () => {
     if (answersRef?.current) {
@@ -130,6 +151,15 @@ const QuestionContextWrapper = ({ children }) => {
     }
   }, [structure]);
 
+  useEffect(() => {
+    const answersCorrect = checkAllAnswers();
+    if (answersCorrect) {
+      handleTimer(false);
+    }
+    if (answersCorrect != allAnswersCorrect)
+      setAllAnswersCorrect(answersCorrect);
+  }, [answers]);
+
   return (
     <QuestionContext.Provider
       value={{
@@ -140,6 +170,9 @@ const QuestionContextWrapper = ({ children }) => {
         focusNext,
         handleSetAnswer,
         answers,
+        handleTimer,
+        startTimer,
+        allAnswersCorrect,
         // time,
       }}
     >

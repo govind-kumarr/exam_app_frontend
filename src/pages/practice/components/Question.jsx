@@ -1,7 +1,8 @@
 import { Button } from "@mui/material";
-import React from "react";
+import React, { memo } from "react";
 
-const Question = ({ number }) => {
+const Question = memo(({ number }) => {
+  console.log("Question");
   return (
     <Button
       variant="contained"
@@ -11,11 +12,10 @@ const Question = ({ number }) => {
         fontSize: 20,
         cursor: "default",
       }}
-      
     >
       {number}
     </Button>
   );
-};
+});
 
 export default Question;

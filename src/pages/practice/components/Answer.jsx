@@ -1,15 +1,23 @@
 import { Box, TextField, Typography } from "@mui/material";
 import useQuestions from "./../../../context/useQuestions";
 import { useEffect, useState } from "react";
+import TimerBox from "./TimerBox";
 
 const Answer = ({ rowNumber, colNumber }) => {
-  const { dataset, addToRefs, focusNext, handleSetAnswer, answers } =
-    useQuestions();
+  console.log("Answer");
+
+  const {
+    dataset,
+    addToRefs,
+    focusNext,
+    handleSetAnswer,
+    answers,
+    handleTimer,
+    startTimer,
+  } = useQuestions();
   const [input, setInput] = useState("");
 
   let actualAnswer = answers[`${rowNumber}${colNumber}`]?.actualAnswer;
-
-  console.log({answers});
 
   const checkAnswer = () => {
     const currentAnswer = answers[`${rowNumber}${colNumber}`];
@@ -54,6 +62,7 @@ const Answer = ({ rowNumber, colNumber }) => {
         }}
         onChange={(e) => {
           setInput(e.target.value);
+          !startTimer ? handleTimer(true) : null;
           if (actualAnswer === Number(e.target.value) && focusNext) {
             focusNext();
             handleSetAnswer(`${rowNumber}${colNumber}`, Number(e.target.value));
@@ -67,24 +76,7 @@ const Answer = ({ rowNumber, colNumber }) => {
       />
     </Box>
   ) : (
-    <Box
-      sx={{
-        maxHeight: "150px",
-        height: "100%",
-        display: "flex",
-      }}
-    >
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h6"></Typography>
-      </Box>
-    </Box>
+    <TimerBox />
   );
 };
 

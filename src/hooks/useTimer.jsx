@@ -35,6 +35,7 @@ const useTimer = () => {
     startTimer: _startTimer,
     stopTimer: _stopTimer,
     resetTimer: _resetTimer,
+    isTimerActive: timeInSec,
   };
 };
 
