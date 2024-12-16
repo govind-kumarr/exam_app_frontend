@@ -10,7 +10,7 @@ import Row from "./components/Row";
 import useQuestions from "./../../context/useQuestions";
 import { useEffect, useState } from "react";
 import CountDown from "./components/CountDown";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Diff } from "../../utils/functions";
 
 const operatorValues = [
@@ -52,20 +52,35 @@ const structure = { rows: 4, cols: 4 };
 const QuestionSlider = () => {
   console.log("QuestionSlider");
   const { dataset, changeStructure, allAnswersCorrect } = useQuestions();
-  const { handleSubmit, setValue, watch, reset, register } = useForm({
+  const { handleSubmit, setValue, watch, reset, control } = useForm({
     defaultValues: {
-      diff: "",
-      operator: "",
-      digit: "",
+      diff: Diff.EASY,
+      operator: {
+        label: "Add",
+        value: "+",
+      },
+      digit: {
+        label: "2",
+        value: 2,
+      },
     },
   });
 
   const onSubmit = (data) => {
     console.log({ data });
     const { diff, digit, operator } = data;
+
     if (diff && digit && operator)
-      changeStructure({ rows: 4, cols: 4, diff, digit, operator });
+      changeStructure({
+        rows: 4,
+        cols: 4,
+        diff: diff,
+        digit: digit.value,
+        operator: operator.value,
+      });
   };
+
+  const [digit, diff, operator] = watch(["digit", "diff", "operator"]);
 
   useEffect(() => {
     changeStructure(structure);
@@ -106,32 +121,81 @@ const QuestionSlider = () => {
           onSubmit={handleSubmit(onSubmit)}
         >
           <FormControl>
-            <InputLabel>Digit</InputLabel>
-            <Select
-              {...register("digit")}
-              label={"Select Digit"}
-              sx={{ color: "black" }}
+            <InputLabel
+              sx={{
+                color: ({ palette }) => palette.primary.main,
+              }}
             >
-              {digitValues.map(({ label, value }) => {
-                return <MenuItem value={value}>{label}</MenuItem>;
-              })}
-            </Select>
+              Digit
+            </InputLabel>
+            <Controller
+              name="digit"
+              control={control}
+              render={(renderValue) => {
+                const { field } = renderValue;
+                return (
+                  <Select
+                    {...field}
+                    renderValue={(selected) =>
+                      selected.label ? selected.label : ""
+                    }
+                    label="Digit"
+                  >
+                    {digitValues.map((option) => {
+                      return (
+                        <MenuItem value={option}>
+                          {option?.label || ""}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                );
+              }}
+            />
           </FormControl>
           <FormControl>
             <InputLabel>Operator</InputLabel>
-            <Select {...register("operator")}>
-              {operatorValues.map(({ label, value }) => {
-                return <MenuItem value={value}>{label}</MenuItem>;
-              })}
-            </Select>
+            <Controller
+              name="operator"
+              control={control}
+              render={(renderValue) => {
+                const { field } = renderValue;
+                return (
+                  <Select
+                    {...field}
+                    renderValue={(selected) =>
+                      selected.label ? selected.label : ""
+                    }
+                    label="Operator"
+                  >
+                    {operatorValues.map((option) => {
+                      return (
+                        <MenuItem value={option}>
+                          {option?.label || ""}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                );
+              }}
+            />
           </FormControl>
           <FormControl>
             <InputLabel>Difficulty</InputLabel>
-            <Select {...register("diff")}>
-              {difficultyValues.map((value) => {
-                return <MenuItem value={value}>{value}</MenuItem>;
-              })}
-            </Select>
+            <Controller
+              name="diff"
+              control={control}
+              render={(renderValue) => {
+                const { field } = renderValue;
+                return (
+                  <Select {...field} label="Difficulty">
+                    {difficultyValues.map((value) => {
+                      return <MenuItem value={value}>{value}</MenuItem>;
+                    })}
+                  </Select>
+                );
+              }}
+            />
           </FormControl>
 
           <Button type="submit">Apply</Button>

@@ -20,7 +20,7 @@ const Operator = {
 
 const QuestionContextWrapper = ({ children }) => {
   console.log("QuestionContextWrapper");
-  
+
   const [dataset, setDataset] = useState(null);
   const [structure, setStructure] = useState({ rows: 4, cols: 4 });
   const [answers, setAnswers] = useState({});
@@ -41,6 +41,7 @@ const QuestionContextWrapper = ({ children }) => {
     const newDataset = prepareData(rows, cols, digit, diff);
 
     setDataset(newDataset);
+    handleTimer(false);
     answersRef.current = null;
     const answers = {};
     newDataset.map((row, rowIndex) => {

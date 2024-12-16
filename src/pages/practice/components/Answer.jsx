@@ -33,7 +33,7 @@ const Answer = ({ rowNumber, colNumber }) => {
     setInput("");
   }, [dataset]);
 
-  return rowNumber && colNumber ? (
+  return (
     <Box
       sx={{
         maxHeight: "150px",
@@ -75,8 +75,6 @@ const Answer = ({ rowNumber, colNumber }) => {
         color={checkAnswer()}
       />
     </Box>
-  ) : (
-    <TimerBox />
   );
 };
 
