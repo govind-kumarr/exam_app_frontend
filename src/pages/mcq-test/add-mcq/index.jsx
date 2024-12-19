@@ -43,6 +43,7 @@ const AddMCQ = () => {
     control,
     formState: { errors },
     handleSubmit,
+    setValue,
   } = useForm({
     defaultValues: {
       questionTitle: "",
@@ -57,14 +58,14 @@ const AddMCQ = () => {
   const textControls = useMemo(
     () => [
       {
-        label: "Expression",
+        label: "MATH",
         icon: <FunctionsIcon width={10} height={10} />,
         onClick: () => {
           console.log("On Click");
         },
       },
       {
-        label: "Bold",
+        label: "BOLD",
         icon: <FormatBoldIcon width={10} height={10} />,
         onClick: () => {
           console.log("On Click");
@@ -73,8 +74,6 @@ const AddMCQ = () => {
     ],
     []
   );
-
-  console.log(errors);
 
   const matches = useMediaQuery("(max-width:600px)");
 
@@ -117,13 +116,13 @@ const AddMCQ = () => {
                   required: true,
                 }}
                 render={({ field }) => {
-                  console.log({ field });
-
                   return (
                     <EnhancedTextField
                       field={field}
                       errors={errors}
                       textControls={textControls}
+                      setValue={setValue}
+                      form_key={"questionTitle"}
                     />
                   );
                 }}

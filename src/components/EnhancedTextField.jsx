@@ -1,13 +1,63 @@
-import { Box, IconButton, TextField, Tooltip } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, IconButton, TextField, Tooltip, Typography } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 import { Node, Context } from "react-mathjax2";
 
-const EnhancedTextField = ({ errors, field, textControls }) => {
+const STYLE_TYPES = {
+  NORMAL: "NORMAL",
+  BOLD: "BOLD",
+  MATH: "MATH",
+};
+
+const EnhancedTextField = ({
+  errors,
+  field,
+  textControls,
+  setValue,
+  form_key,
+}) => {
+  const [textNodes, setTextNodes] = useState([]);
   const [showControls, setShowControls] = useState(false);
-  const [activeControl, setActiveControl] = useState("");
+  const [activeControl, setActiveControl] = useState(STYLE_TYPES.NORMAL);
+
+  const handleActiveControlClick = (control) => {
+    const currentText = field?.value || "";
+    if (currentText.length) {
+      setTextNodes((prev) => [
+        ...prev,
+        { value: currentText, style: activeControl },
+      ]);
+      setValue(form_key, "");
+    }
+    if (activeControl === control) {
+      return setActiveControl(STYLE_TYPES.NORMAL);
+    }
+
+    setActiveControl(control);
+  };
+
+  console.log({ activeControl });
+
+  const nodesToShow = textNodes.map((node) => {
+    if (node.style === STYLE_TYPES.NORMAL) return <span>{node.value}</span>;
+    else if (node.style === STYLE_TYPES.MATH)
+      return (
+        <Context input="ascii">
+          <Node>{node?.value || ""}</Node>
+        </Context>
+      );
+    else if (node.style === STYLE_TYPES.BOLD)
+      return <Typography fontWeight={500}>{node.value}</Typography>;
+  });
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+      <Box>
+        {nodesToShow &&
+          nodesToShow.length > 0 &&
+          nodesToShow.map((node) => {
+            return node;
+          })}
+      </Box>
       <Box sx={{ display: "flex", alignItems: "center", gap: "5px" }}>
         {showControls &&
           textControls.map((control) => {
@@ -19,23 +69,13 @@ const EnhancedTextField = ({ errors, field, textControls }) => {
                 }
                 sx={{ borderRadius: 9999 }}
               >
-                <Tooltip
-                  open={activeControl}
-                  title={
-                    <Context input="ascii">
-                      <Node>{field?.value || ""}</Node>
-                    </Context>
-                  }
+                <IconButton
+                  onClick={(e) => {
+                    handleActiveControlClick(label);
+                  }}
                 >
-                  <IconButton
-                    onClick={(e) => {
-                      setActiveControl(label);
-                      handleClick(e);
-                    }}
-                  >
-                    {icon}
-                  </IconButton>
-                </Tooltip>
+                  {icon}
+                </IconButton>
               </Box>
             );
           })}
@@ -53,10 +93,9 @@ const EnhancedTextField = ({ errors, field, textControls }) => {
         onFocus={() => {
           setShowControls(true);
         }}
-        onBlur={() => {
-          setShowControls(true);
-          setActiveControl("");
-        }}
+        // onBlur={() => {
+        //   setShowControls(true);
+        // }}
       />
     </Box>
   );
