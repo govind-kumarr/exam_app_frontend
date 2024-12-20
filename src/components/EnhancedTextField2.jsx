@@ -11,7 +11,6 @@ const EnhancedTextField2 = () => {
   const [text, setText] = useState("");
 
   const handleActiveControlClick = (control) => {
-    // if (control === activeControl) return;
     if (text.length) {
       setTextNodes((prev) => [...prev, { value: text, style: activeControl }]);
       setText("");
@@ -26,13 +25,19 @@ const EnhancedTextField2 = () => {
       return <Typography>{node.value}</Typography>;
     else if (node.style === STYLE_TYPES.MATH)
       return (
-        <Context input="ascii">
-          <Node>{node?.value || ""}</Node>
-        </Context>
+        <Typography>
+          <Context input="ascii">
+            <Node>{node?.value || ""}</Node>
+          </Context>
+        </Typography>
       );
     else if (node.style === STYLE_TYPES.BOLD)
       return <Typography fontWeight={500}>{node.value}</Typography>;
   });
+
+  const handleKeyDown = (e) => {
+    // if(e. )
+  };
 
   const getPreview = (control, text) => {
     if (control === STYLE_TYPES.MATH)
@@ -72,27 +77,48 @@ const EnhancedTextField2 = () => {
           })}
       </Box>
 
-      <Box sx={{ display: "flex", gap: "4px", whiteSpace: "nowrap" }}>
-        {nodesToShow &&
-          nodesToShow.length > 0 &&
-          nodesToShow.map((node) => {
-            return node;
-          })}
+      <Box
+        sx={{
+          display: "flex",
+          gap: "4px",
+          whiteSpace: "nowrap",
+          width: "100%",
+          border: ({ palette }) => `2px solid ${palette.primary.main}`,
+          p: 1,
+        }}
+      >
+        <Box sx={{ display: "flex", gap: "4px", alignItems: "center" }}>
+          {nodesToShow &&
+            nodesToShow.length > 0 &&
+            nodesToShow.map((node) => {
+              return node;
+            })}
+        </Box>
 
-        {/* {getPreview(activeControl, text)} */}
+        {getPreview(activeControl, text)}
 
-        <TextField
-          focused
-          placeholder="Enter question here..."
-          sx={{
-            width: "100%",
-          }}
+        <input
+          type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
           onFocus={() => {
             setShowControls(true);
           }}
+          style={{ border: "none", outline: "none" }}
+          onKeyDown={(e) => {
+           
+          }}
         />
+
+        {/* <TextField
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          sx={{ border: "none", outline: "none" }}
+          onFocus={() => {
+            setShowControls(true);
+          }}
+          border={'none'}
+        /> */}
       </Box>
     </Box>
   );

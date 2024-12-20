@@ -8,6 +8,7 @@ export const textControls = [
     onClick: () => {
       console.log("On Click");
     },
+    shortKey: ["CTRL", "E"],
   },
   {
     label: "BOLD",
@@ -15,6 +16,7 @@ export const textControls = [
     onClick: () => {
       console.log("On Click");
     },
+    shortKey: ["CTRL", "B"],
   },
 ];
 

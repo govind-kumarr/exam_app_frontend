@@ -5,11 +5,12 @@ const TextField = (props) => {
   return (
     <MUITextField
       {...props}
+      sx={{ border: "none" }}
       slotProps={{
         ...(props?.slotProps || {}),
         htmlInput: {
           style: {
-            padding: "0px",
+            padding: "5px",
           },
         },
       }}

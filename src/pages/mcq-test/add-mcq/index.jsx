@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import MCQPreview from "./show-preview";
 import EnhancedTextField from "../../../components/EnhancedTextField";
+import EnhancedTextField2 from "../../../components/EnhancedTextField2";
 
 const options = [
   {
@@ -92,11 +93,11 @@ const AddMCQ = () => {
                 }}
                 render={({ field }) => {
                   return (
-                    <EnhancedTextField
-                      field={field}
-                      errors={errors}
-                      setValue={setValue}
-                      form_key={"questionTitle"}
+                    <EnhancedTextField2
+                      // field={field}
+                      // errors={errors}
+                      // setValue={setValue}
+                      // form_key={"questionTitle"}
                     />
                   );
                 }}
