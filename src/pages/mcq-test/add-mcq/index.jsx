@@ -2,18 +2,13 @@ import {
   Box,
   Button,
   FormControl,
-  IconButton,
-  InputLabel,
   TextField,
   Typography,
-  useFormControl,
   useMediaQuery,
 } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import MCQPreview from "./show-preview";
-import FunctionsIcon from "@mui/icons-material/Functions";
-import FormatBoldIcon from "@mui/icons-material/FormatBold";
 import EnhancedTextField from "../../../components/EnhancedTextField";
 
 const options = [
@@ -54,26 +49,6 @@ const AddMCQ = () => {
       ],
     },
   });
-
-  const textControls = useMemo(
-    () => [
-      {
-        label: "MATH",
-        icon: <FunctionsIcon width={10} height={10} />,
-        onClick: () => {
-          console.log("On Click");
-        },
-      },
-      {
-        label: "BOLD",
-        icon: <FormatBoldIcon width={10} height={10} />,
-        onClick: () => {
-          console.log("On Click");
-        },
-      },
-    ],
-    []
-  );
 
   const matches = useMediaQuery("(max-width:600px)");
 
@@ -120,7 +95,6 @@ const AddMCQ = () => {
                     <EnhancedTextField
                       field={field}
                       errors={errors}
-                      textControls={textControls}
                       setValue={setValue}
                       form_key={"questionTitle"}
                     />

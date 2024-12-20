@@ -1,24 +1,24 @@
-import { Box, IconButton, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { Node, Context } from "react-mathjax2";
+import React, { useRef, useState } from "react";
 import { STYLE_TYPES, textControls } from "../constants";
+import { Box, IconButton, Typography } from "@mui/material";
+import { Context, Node } from "react-mathjax2";
+import TextField from "./form-elements/TextField/Index";
 
-const EnhancedTextField = ({ errors, field, setValue, form_key }) => {
+const EnhancedTextField2 = () => {
   const [textNodes, setTextNodes] = useState([]);
   const [showControls, setShowControls] = useState(false);
   const [activeControl, setActiveControl] = useState(STYLE_TYPES.NORMAL);
+  const [text, setText] = useState("");
 
   const handleActiveControlClick = (control) => {
-    const currentText = field?.value || "";
-    if (currentText.length) {
-      setTextNodes((prev) => [
-        ...prev,
-        { value: currentText, style: activeControl },
-      ]);
-      setValue(form_key, "");
+    // if (control === activeControl) return;
+    if (text.length) {
+      setTextNodes((prev) => [...prev, { value: text, style: activeControl }]);
+      setText("");
     }
-    if (activeControl === control) return setActiveControl(STYLE_TYPES.NORMAL);
-    setActiveControl(control);
+
+    if (activeControl === control) setActiveControl(STYLE_TYPES.NORMAL);
+    else setActiveControl(control);
   };
 
   const nodesToShow = textNodes.map((node) => {
@@ -34,15 +34,21 @@ const EnhancedTextField = ({ errors, field, setValue, form_key }) => {
       return <Typography fontWeight={500}>{node.value}</Typography>;
   });
 
+  const getPreview = (control, text) => {
+    if (control === STYLE_TYPES.MATH)
+      return (
+        <Context input="ascii">
+          <Node>{text || ""}</Node>
+        </Context>
+      );
+    else if (control === STYLE_TYPES.BOLD)
+      return <Typography fontWeight={500}>{text}</Typography>;
+
+    return null;
+  };
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-      <Box>
-        {nodesToShow &&
-          nodesToShow.length > 0 &&
-          nodesToShow.map((node) => {
-            return node;
-          })}
-      </Box>
       <Box sx={{ display: "flex", alignItems: "center", gap: "5px" }}>
         {showControls &&
           textControls.map((control) => {
@@ -66,24 +72,30 @@ const EnhancedTextField = ({ errors, field, setValue, form_key }) => {
           })}
       </Box>
 
-      <TextField
-        {...field}
-        multiline
-        focused
-        maxRows={3}
-        placeholder="Enter question here..."
-        sx={{ width: "100%" }}
-        error={errors[field?.name]}
-        helperText={errors[field?.name] ? "This field is required" : ""}
-        onFocus={() => {
-          setShowControls(true);
-        }}
-        // onBlur={() => {
-        //   setShowControls(true);
-        // }}
-      />
+      <Box sx={{ display: "flex", gap: "4px", whiteSpace: "nowrap" }}>
+        {nodesToShow &&
+          nodesToShow.length > 0 &&
+          nodesToShow.map((node) => {
+            return node;
+          })}
+
+        {/* {getPreview(activeControl, text)} */}
+
+        <TextField
+          focused
+          placeholder="Enter question here..."
+          sx={{
+            width: "100%",
+          }}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onFocus={() => {
+            setShowControls(true);
+          }}
+        />
+      </Box>
     </Box>
   );
 };
 
-export default EnhancedTextField;
+export default EnhancedTextField2;
