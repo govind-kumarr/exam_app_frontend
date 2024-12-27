@@ -11,6 +11,9 @@ import { useForm, Controller } from "react-hook-form";
 import MCQPreview from "./show-preview";
 import EnhancedTextField from "../../../components/EnhancedTextField";
 import EnhancedTextField2 from "../../../components/EnhancedTextField2";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { mcqSchema } from "../../../schema/mcq-schema";
 
 const options = [
   {
@@ -36,26 +39,32 @@ const AddMCQ = () => {
   const [showPreview, setShowPreview] = useState(false);
 
   const {
-    control,
     formState: { errors },
     handleSubmit,
     setValue,
   } = useForm({
+    resolver: yupResolver(mcqSchema),
     defaultValues: {
-      questionTitle: "",
-      options: [
-        {
-          optionValue: "",
-        },
-      ],
+      questionTitle: [],
+      options: [],
     },
   });
 
   const matches = useMediaQuery("(max-width:600px)");
+  console.log({errors});
+  
 
   const handleAddMCQ = (data) => {
+    console.log({ errors, data });
+    if (Object.keys(errors).length > 0) return;
     setMcqs((prev) => [...prev, data]);
     setShowPreview(true);
+  };
+
+  const getTextNodes = (key) => {
+    return (value) => {
+      setValue(key, value, { shouldValidate: true });
+    };
   };
 
   return (
@@ -85,23 +94,20 @@ const AddMCQ = () => {
               }}
             >
               <Typography variant="h5">Title</Typography>
-              <Controller
+              <EnhancedTextField2
+                getTextNodes={getTextNodes("questionTitle")}
+                error={errors?.questionTitle?.message || ""}
+              />
+              {/* <Controller
                 name="questionTitle"
                 control={control}
                 rules={{
                   required: true,
                 }}
                 render={({ field }) => {
-                  return (
-                    <EnhancedTextField2
-                      // field={field}
-                      // errors={errors}
-                      // setValue={setValue}
-                      // form_key={"questionTitle"}
-                    />
-                  );
+                  return <EnhancedTextField2 />;
                 }}
-              />
+              /> */}
             </FormControl>
           </Box>
           <Box
@@ -120,12 +126,16 @@ const AddMCQ = () => {
                   flexDirection: "column",
                   gap: "5px",
                   padding: "10px",
+                  height: "100px",
                 }}
               >
                 <Box>
                   {!matches && <Typography>{option.option}.</Typography>}
                 </Box>
-                <Controller
+                <EnhancedTextField2
+                  getTextNodes={getTextNodes(`options.${index}.optionValue`)}
+                />
+                {/* <Controller
                   name={`options.${index}.optionValue`}
                   control={control}
                   rules={{
@@ -153,7 +163,7 @@ const AddMCQ = () => {
                       />
                     );
                   }}
-                />
+                /> */}
               </Box>
             ))}
           </Box>

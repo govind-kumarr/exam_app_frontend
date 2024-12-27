@@ -1,5 +1,6 @@
 import { Box, TextField, Typography, useMediaQuery } from "@mui/material";
 import React from "react";
+import RenderTextNodes from "../../../components/custom/RenderTextNodes";
 
 const MCQPreview = ({ mcqs = [] }) => {
   const matches = useMediaQuery("(max-width:600px)");
@@ -21,7 +22,7 @@ const MCQPreview = ({ mcqs = [] }) => {
               }}
             >
               <Box sx={{ width: "100%" }}>
-                <Typography variant="h5">{questionTitle || ""}</Typography>
+                <RenderTextNodes textNodes={questionTitle} />
               </Box>
               <Box
                 sx={{
@@ -45,14 +46,15 @@ const MCQPreview = ({ mcqs = [] }) => {
                       }}
                       key={index}
                     >
-                      <TextField
+                      <RenderTextNodes textNodes={optionValue} />
+                      {/* <TextField
                         value={optionValue}
                         slotProps={{
                           input: {
                             readOnly: true,
                           },
                         }}
-                      />
+                      /> */}
                     </Box>
                   );
                 })}

@@ -4,7 +4,13 @@ import FormatBoldIcon from "@mui/icons-material/FormatBold";
 export const textControls = [
   {
     label: "MATH",
-    icon: <FunctionsIcon />,
+    icon: (
+      <FunctionsIcon
+        sx={{
+          fontSize: 18,
+        }}
+      />
+    ),
     onClick: () => {
       console.log("On Click");
     },
@@ -12,7 +18,13 @@ export const textControls = [
   },
   {
     label: "BOLD",
-    icon: <FormatBoldIcon />,
+    icon: (
+      <FormatBoldIcon
+        sx={{
+          fontSize: 18,
+        }}
+      />
+    ),
     onClick: () => {
       console.log("On Click");
     },
