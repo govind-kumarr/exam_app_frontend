@@ -4,7 +4,7 @@ import RenderTextNodes from "../../../components/custom/RenderTextNodes";
 import { IMCQ } from "../../../types/interfaces/component-interfaces";
 import Options from "./options";
 
-const MCQ: FC<IMCQ> = ({ mcq }) => {
+const MCQ: FC<IMCQ> = ({ mcq, optionId, questionId, setOptionId }) => {
   const { questionTitle, options } = mcq;
 
   return (
@@ -22,7 +22,12 @@ const MCQ: FC<IMCQ> = ({ mcq }) => {
       <Box sx={{ width: "100%" }}>
         <RenderTextNodes textNodes={questionTitle} />
       </Box>
-      <Options options={options} />
+      <Options
+        options={options}
+        questionId={questionId}
+        setOptionId={setOptionId}
+        optionId={optionId}
+      />
     </Box>
   );
 };

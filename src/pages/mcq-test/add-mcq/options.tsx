@@ -1,11 +1,15 @@
 import { Box, Button, useMediaQuery } from "@mui/material";
-import React, { FC, useState } from "react";
+import { FC } from "react";
 import RenderTextNodes from "../../../components/custom/RenderTextNodes";
 import { IOptions } from "../../../types/interfaces/component-interfaces";
 
-const Options: FC<IOptions> = ({ options }) => {
+const Options: FC<IOptions> = ({
+  options,
+  optionId,
+  questionId,
+  setOptionId,
+}) => {
   const matches = useMediaQuery("(max-width:600px)");
-  const [selectedOption, setSelectedOption] = useState<string>("");
 
   return (
     <Box
@@ -27,8 +31,11 @@ const Options: FC<IOptions> = ({ options }) => {
               padding: "10px",
             }}
             key={index}
-            onClick={() => setSelectedOption(index + "")}
-            variant={index + "" === selectedOption ? "contained" : "outlined"}
+            onClick={() => {
+              // setSelectedOption(index + "");
+              setOptionId(questionId, index);
+            }}
+            variant={index === optionId ? "contained" : "outlined"}
           >
             <RenderTextNodes textNodes={optionValue} />
           </Button>

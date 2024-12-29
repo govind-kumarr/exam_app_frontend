@@ -17,6 +17,9 @@ interface IMCQPreview {
 
 interface IMCQ {
   mcq: T_AddMCQForm;
+  questionId: number;
+  optionId?: number | undefined;
+  setOptionId: (questionId: number, optionId: number) => void;
 }
 
 interface IOption {
@@ -25,6 +28,9 @@ interface IOption {
 
 interface IOptions {
   options: IOption[];
+  questionId: number;
+  optionId: number | undefined;
+  setOptionId: (questionId: number, optionId: number) => void;
 }
 
 interface ISidebar {
