@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import  { FC } from "react";
 import { ISidebar } from "../../types/interfaces/component-interfaces";
 import { Box, Button } from "@mui/material";
 import { motion } from "motion/react";
