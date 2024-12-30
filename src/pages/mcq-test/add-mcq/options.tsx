@@ -3,7 +3,7 @@ import React, { FC, useState } from "react";
 import RenderTextNodes from "../../../components/custom/RenderTextNodes";
 import { IOptions } from "../../../types/interfaces/component-interfaces";
 
-const Options: FC<IOptions> = ({ options }) => {
+const Options: FC<IOptions> = ({ options, markCorrect }) => {
   const matches = useMediaQuery("(max-width:600px)");
   const [selectedOption, setSelectedOption] = useState<string>("");
 
@@ -27,7 +27,10 @@ const Options: FC<IOptions> = ({ options }) => {
               padding: "10px",
             }}
             key={index}
-            onClick={() => setSelectedOption(index + "")}
+            onClick={() => {
+              setSelectedOption(index + "");
+              markCorrect(index)
+            }}
             variant={index + "" === selectedOption ? "contained" : "outlined"}
           >
             <RenderTextNodes textNodes={optionValue} />

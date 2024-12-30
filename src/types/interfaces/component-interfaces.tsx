@@ -17,6 +17,7 @@ interface IMCQPreview {
 
 interface IMCQ {
   mcq: T_AddMCQForm;
+  markCorrect?: (optionIndex: number) => void;
 }
 
 interface IOption {
@@ -25,6 +26,7 @@ interface IOption {
 
 interface IOptions {
   options: IOption[];
+  markCorrect: (optionIndex: number) => void;
 }
 
 interface ISidebar {
