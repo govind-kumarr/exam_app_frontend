@@ -19,7 +19,8 @@ interface IMCQ {
   mcq: T_AddMCQForm;
   questionId: number;
   optionId?: number | undefined;
-  setOptionId: (questionId: number, optionId: number) => void;
+  setOptionId?: (questionId: number, optionId: number) => void;
+  markCorrect?: (optionIndex: number) => void;
 }
 
 interface IOption {
@@ -31,6 +32,7 @@ interface IOptions {
   questionId: number;
   optionId: number | undefined;
   setOptionId: (questionId: number, optionId: number) => void;
+  markCorrect: (optionIndex: number) => void;
 }
 
 interface ISidebar {

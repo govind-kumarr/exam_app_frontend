@@ -34,6 +34,10 @@ const mcqSchema = yup.object({
           )
           .required("Option value is required")
           .min(1, "Option must have at least one value"),
+        isCorrect: yup
+          .boolean()
+          .default(false)
+          .required("Tick Whether option is correct or not"),
       })
     )
     .required("Options are required")

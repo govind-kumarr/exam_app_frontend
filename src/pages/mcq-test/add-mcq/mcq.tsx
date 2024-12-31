@@ -4,7 +4,13 @@ import RenderTextNodes from "../../../components/custom/RenderTextNodes";
 import { IMCQ } from "../../../types/interfaces/component-interfaces";
 import Options from "./options";
 
-const MCQ: FC<IMCQ> = ({ mcq, optionId, questionId, setOptionId }) => {
+const MCQ: FC<IMCQ> = ({
+  mcq,
+  optionId,
+  questionId,
+  setOptionId = () => null,
+  markCorrect = () => null,
+}) => {
   const { questionTitle, options } = mcq;
 
   return (
@@ -14,9 +20,10 @@ const MCQ: FC<IMCQ> = ({ mcq, optionId, questionId, setOptionId }) => {
         margin: "auto",
         flexDirection: "column",
         alignItems: "center",
-        maxWidth: "900px",
+        // maxWidth: "900px",
+        width: "100%",
         gap: "10px",
-        border: "1px solid black",
+        // border: "1px solid black",
       }}
     >
       <Box sx={{ width: "100%" }}>
@@ -27,6 +34,7 @@ const MCQ: FC<IMCQ> = ({ mcq, optionId, questionId, setOptionId }) => {
         questionId={questionId}
         setOptionId={setOptionId}
         optionId={optionId}
+        markCorrect={markCorrect}
       />
     </Box>
   );

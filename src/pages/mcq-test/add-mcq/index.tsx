@@ -7,12 +7,14 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import MCQPreview from "./show-preview";
 import EnhancedTextField from "../../../components/EnhancedTextField";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { AllPaths, mcqSchema, T_AddMCQForm } from "../../../schema/mcq-schema";
 import { ITextNode } from "../../../types/interfaces/text-interfaces";
-import { options } from "../../../constants";
+import { options as dummyOptions } from "../../../constants";
+import { useMutation } from "react-query";
+import { addMcqs } from "../../../services/actions";
+import MCQ from "./mcq";
 
 const AddMCQ = () => {
   const [mcqs, setMcqs] = useState<T_AddMCQForm[]>([]);
@@ -22,6 +24,7 @@ const AddMCQ = () => {
     formState: { errors },
     handleSubmit,
     setValue,
+    watch,
   } = useForm({
     resolver: yupResolver(mcqSchema),
     defaultValues: {
@@ -30,8 +33,24 @@ const AddMCQ = () => {
     },
   });
 
+  const [options] = watch(["options"]);
+
   const matches = useMediaQuery("(max-width:600px)");
-  console.log({ errors });
+
+  const {
+    mutate: addMcqsMutate,
+    isLoading: addMcqPending,
+    reset,
+  } = useMutation({
+    mutationKey: "addMcqs",
+    mutationFn: addMcqs,
+    onSuccess: (response) => {
+      console.log(response);
+
+      reset();
+      setShowPreview(false);
+    },
+  });
 
   const handleAddMCQ = (data: T_AddMCQForm) => {
     console.log({ errors, data });
@@ -46,10 +65,49 @@ const AddMCQ = () => {
     };
   };
 
+  const markCorrect = (optionIndex: number) => {
+    if (optionIndex === undefined || optionIndex === null) return;
+
+    if (options.length > 0) {
+      options.map((_, index) => {
+        if (index === optionIndex)
+          setValue(`options.${optionIndex}.isCorrect`, true);
+        else setValue(`options.${index}.isCorrect`, false);
+      });
+    }
+  };
+
+  const saveMcq = () => {
+    if (options.filter((val) => val.isCorrect).length) {
+      addMcqsMutate({ mcqs: [watch()] });
+    }
+  };
+
   return (
     <Box sx={{}}>
       {showPreview ? (
-        <MCQPreview mcqs={mcqs} />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "end",
+            maxWidth: "900px",
+            gap: "10px",
+            width: "100%",
+            // border: '1px solid black',
+            m: "auto",
+          }}
+        >
+          <MCQ mcq={mcqs[0]} questionId={0} markCorrect={markCorrect} />
+          <Button
+            onClick={saveMcq}
+            disabled={
+              !options.filter((val) => val.isCorrect).length || addMcqPending
+            }
+          >
+            {addMcqPending ? "adding..." : "Add"}
+          </Button>
+        </Box>
       ) : (
         <Box
           sx={{
@@ -88,7 +146,7 @@ const AddMCQ = () => {
               gap: matches ? 1 : 4,
             }}
           >
-            {options.map((option, index) => (
+            {dummyOptions.map((option, index) => (
               <Box
                 key={`options.${index}`}
                 sx={{
