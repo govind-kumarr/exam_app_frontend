@@ -110,7 +110,7 @@ const EnhancedTextField: FC<IEhancedTextField> = ({
         sx={{
           display: "flex",
           gap: "4px",
-          whiteSpace: "nowrap",
+          // whiteSpace: "nowrap",
           width: "100%",
           border: ({ palette }) =>
             `2px solid ${
@@ -137,7 +137,7 @@ const EnhancedTextField: FC<IEhancedTextField> = ({
           onFocus={() => {
             setShowControls(true);
           }}
-          style={{ border: "none", outline: "none", fontSize: "14px" }}
+          style={{ border: "none", outline: "none", fontSize: "14px", flexGrow: 1 }}
           onBlur={addNode}
           onKeyDown={handleKeyDown}
         />

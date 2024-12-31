@@ -10,6 +10,8 @@ import { useForm } from "react-hook-form";
 
 const MCQPreview: FC<IMCQPreview> = ({ mcqs = [] }) => {
   const [activeQuestion, setActiveQuestion] = useState(0);
+  console.log(mcqs);
+  
   const { setValue, watch } = useForm({
     defaultValues: {
       result: [
@@ -24,7 +26,7 @@ const MCQPreview: FC<IMCQPreview> = ({ mcqs = [] }) => {
   const setOptionId = (questionId: number, optionId: number) => {
     setValue(`result.${questionId}.optionId`, optionId);
   };
-  const { data: mcqss, isLoading: mcqsLoading } = useQuery({
+  const { data: mcqss = [], isLoading: mcqsLoading } = useQuery({
     queryKey: "getMcqs",
     queryFn: getMcqs,
     select: (response: AxiosResponse) => {
@@ -44,9 +46,9 @@ const MCQPreview: FC<IMCQPreview> = ({ mcqs = [] }) => {
       }}
     >
       <Box sx={{ width: "100%" }}>
-        {mcqs.length > 0 && (
+        {mcqss.length > 0 && (
           <MCQ
-            mcq={mcqs[activeQuestion]}
+            mcq={mcqss[activeQuestion]}
             questionId={activeQuestion}
             optionId={watch(`result.${activeQuestion}.optionId`)}
             setOptionId={setOptionId}
@@ -54,7 +56,7 @@ const MCQPreview: FC<IMCQPreview> = ({ mcqs = [] }) => {
         )}
       </Box>
       <ProgressInfo
-        mcqs={mcqs}
+        mcqs={mcqss}
         activeQuestionId={activeQuestion}
         setActiveQuestionId={setActiveQuestion}
       />

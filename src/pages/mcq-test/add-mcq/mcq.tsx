@@ -20,10 +20,8 @@ const MCQ: FC<IMCQ> = ({
         margin: "auto",
         flexDirection: "column",
         alignItems: "center",
-        // maxWidth: "900px",
         width: "100%",
         gap: "10px",
-        // border: "1px solid black",
       }}
     >
       <Box sx={{ width: "100%" }}>

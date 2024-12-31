@@ -94,11 +94,15 @@ const AddMCQ = () => {
             maxWidth: "900px",
             gap: "10px",
             width: "100%",
-            // border: '1px solid black',
             m: "auto",
           }}
         >
-          <MCQ mcq={mcqs[0]} questionId={0} markCorrect={markCorrect} />
+          <MCQ
+            mcq={mcqs[0]}
+            questionId={0}
+            optionId={watch('options').findIndex(o => o.isCorrect)}
+            markCorrect={markCorrect}
+          />
           <Button
             onClick={saveMcq}
             disabled={

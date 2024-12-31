@@ -12,7 +12,7 @@ interface IRenderTextNodes {
 }
 
 interface IMCQPreview {
-  mcqs: T_AddMCQForm[];
+  mcqs?: T_AddMCQForm[];
 }
 
 interface IMCQ {

@@ -8,6 +8,7 @@ const Options: FC<IOptions> = ({
   optionId,
   questionId,
   setOptionId,
+  markCorrect
 }) => {
   const matches = useMediaQuery("(max-width:600px)");
 
@@ -34,6 +35,7 @@ const Options: FC<IOptions> = ({
             onClick={() => {
               // setSelectedOption(index + "");
               setOptionId(questionId, index);
+              markCorrect(index)
             }}
             variant={index === optionId ? "contained" : "outlined"}
           >
