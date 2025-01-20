@@ -47,6 +47,21 @@ interface IProgressInfo {
   setActiveQuestionId: (questionId: number) => void;
 }
 
+type directions = "left" | "right" | "up" | "down";
+
+type position = {
+  top: number;
+  left: number;
+};
+
+interface MovableProps {
+  direction: directions;
+  stop: boolean;
+  position: position;
+  addSnake?: () => void;
+  tail?: boolean;
+  head?: boolean;
+}
 export type {
   IEhancedTextField,
   IRenderTextNodes,
@@ -56,4 +71,7 @@ export type {
   IOptions,
   ISidebar,
   IProgressInfo,
+  directions,
+  position,
+  MovableProps,
 };

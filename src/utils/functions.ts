@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-empty */
 import _ from "lodash";
+import { position } from "../types/interfaces/component-interfaces";
 
 export const generateRandomNumber = (min = 10, max = 99) => {
   return _.random(min, max);
@@ -11,7 +14,7 @@ export const Diff = {
 };
 
 export const prepareData = (n, m, digit, difficulty) => {
-  const matrix = [];
+  const matrix: any[] = [];
   const maxDigitNumber = 10 ** digit - 1;
   let minDigitNumber = 10;
 
@@ -76,16 +79,39 @@ export const getFormattedTime = (timeInSeconds) => {
   }${seconds}`;
 };
 
-export function listenForOutsideClicks(listening, setListening, menuRef, setIsOpen) {
+export function listenForOutsideClicks(
+  listening,
+  setListening,
+  menuRef,
+  setIsOpen
+) {
   return () => {
     if (listening) return;
     if (!menuRef.current) return;
     setListening(true);
-    [`click`, `touchstart`].forEach((type) => {
+    [`click`, `touchstart`].forEach(() => {
       document.addEventListener(`click`, (evt) => {
         if (menuRef?.current?.contains(evt.target)) return;
         setIsOpen(false);
       });
     });
-  }
+  };
 }
+
+export const canEat = (foodPos: position, snakePos: position) => {
+  console.log({ foodPos, snakePos });
+  if (foodPos && snakePos) {
+    return foodPos.top === snakePos.top && foodPos.left === snakePos.left;
+  }
+  return false;
+};
+
+const getNumber = () => {
+  const num = Math.random() * 100;
+  if (num === 0) return num + 1;
+  return Math.floor(num);
+};
+
+export const getRandomNumber = (): position => {
+  return { top: getNumber(), left: getNumber() };
+};

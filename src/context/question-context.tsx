@@ -1,6 +1,5 @@
-import React, { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { Diff, prepareData } from "../utils/functions";
-import useTimer from "../hooks/useTimer";
 
 const QuestionContext = createContext({
   dataset: null,
