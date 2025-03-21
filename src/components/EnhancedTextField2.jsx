@@ -3,6 +3,7 @@ import { STYLE_TYPES, textControls } from "../constants";
 import { Box, IconButton, Typography } from "@mui/material";
 import { Context, Node } from "react-mathjax2";
 import { listenForOutsideClicks } from "../utils/functions";
+import RenderTextNodes from "./custom/RenderTextNodes";
 
 const EnhancedTextField2 = ({ getTextNodes, error = false }) => {
   const [textNodes, setTextNodes] = useState([]);
@@ -11,7 +12,7 @@ const EnhancedTextField2 = ({ getTextNodes, error = false }) => {
   const [text, setText] = useState("");
 
   const menuRef = useRef(null);
-  const inputRef = useRef(null)
+  const inputRef = useRef(null);
   const [listening, setListening] = useState(false);
 
   const addNode = () => {
@@ -86,13 +87,17 @@ const EnhancedTextField2 = ({ getTextNodes, error = false }) => {
         height: "100%",
       }}
       onClick={() => {
-        if(inputRef?.current) {
-          inputRef?.current?.focus()
+        if (inputRef?.current) {
+          inputRef?.current?.focus();
         }
       }}
       ref={menuRef}
     >
-      {error && <Typography color="error" fontSize={14}>{error}</Typography>}
+      {error && (
+        <Typography color="error" fontSize={14}>
+          {error}
+        </Typography>
+      )}
       <Box
         sx={{
           display: "flex",
@@ -109,15 +114,10 @@ const EnhancedTextField2 = ({ getTextNodes, error = false }) => {
             }`,
           p: 1,
           borderRadius: "5px",
+          alignItems: "center",
         }}
       >
-        <Box sx={{ display: "flex", gap: "4px", alignItems: "center" }}>
-          {nodesToShow &&
-            nodesToShow.length > 0 &&
-            nodesToShow.map((node) => {
-              return node;
-            })}
-        </Box>
+        <RenderTextNodes textNodes={textNodes} />
 
         {getPreview(activeControl, text)}
 
